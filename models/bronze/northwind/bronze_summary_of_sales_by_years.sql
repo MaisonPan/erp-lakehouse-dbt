@@ -8,7 +8,7 @@ WITH src AS (
             '/Orders/([0-9]{4}-[0-9]{2}-[0-9]{2})/',
             1
         ) AS load_date
-    FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/summary_of_sales_by_years/*/summary_of_sales_by_years`
+    FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Summary_of_Sales_by_Years/*/Summary_of_Sales_by_Years`
 )
 
 SELECT *
