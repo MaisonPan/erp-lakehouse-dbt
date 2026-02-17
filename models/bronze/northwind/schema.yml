@@ -1,0 +1,184 @@
+version: 2
+
+models:
+  - name: bronze_categories
+    description: "Bronze raw table for Northwind: Categories"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_customerdemographics
+    description: "Bronze raw table for Northwind: CustomerDemographics"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_customers
+    description: "Bronze raw table for Northwind: Customers"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_employees
+    description: "Bronze raw table for Northwind: Employees"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_order_details
+    description: "Bronze raw table for Northwind: Order_Details"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_orders
+    description: "Bronze raw table for Northwind: Orders"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_products
+    description: "Bronze raw table for Northwind: Products"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_regions
+    description: "Bronze raw table for Northwind: Regions"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_shippers
+    description: "Bronze raw table for Northwind: Shippers"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_suppliers
+    description: "Bronze raw table for Northwind: Suppliers"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_territories
+    description: "Bronze raw table for Northwind: Territories"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_alphabetical_list_of_products
+    description: "Bronze raw table for Northwind: Alphabetical_list_of_products"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_category_sales_for_1997
+    description: "Bronze raw table for Northwind: Category_Sales_for_1997"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_current_product_lists
+    description: "Bronze raw table for Northwind: Current_Product_Lists"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_customer_and_suppliers_by_cities
+    description: "Bronze raw table for Northwind: Customer_and_Suppliers_by_Cities"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_invoices
+    description: "Bronze raw table for Northwind: Invoices"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_order_details_extendeds
+    description: "Bronze raw table for Northwind: Order_Details_Extendeds"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_order_subtotals
+    description: "Bronze raw table for Northwind: Order_Subtotals"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_orders_qries
+    description: "Bronze raw table for Northwind: Orders_Qries"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_product_sales_for_1997
+    description: "Bronze raw table for Northwind: Product_Sales_for_1997"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_products_above_average_prices
+    description: "Bronze raw table for Northwind: Products_Above_Average_Prices"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_products_by_categories
+    description: "Bronze raw table for Northwind: Products_by_Categories"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_sales_by_categories
+    description: "Bronze raw table for Northwind: Sales_by_Categories"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_sales_totals_by_amounts
+    description: "Bronze raw table for Northwind: Sales_Totals_by_Amounts"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_summary_of_sales_by_quarters
+    description: "Bronze raw table for Northwind: Summary_of_Sales_by_Quarters"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
+
+  - name: bronze_summary_of_sales_by_years
+    description: "Bronze raw table for Northwind: Summary_of_Sales_by_Years"
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)"
+        tests: [not_null]
