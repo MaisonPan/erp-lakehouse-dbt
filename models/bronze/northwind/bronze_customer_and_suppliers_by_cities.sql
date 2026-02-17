@@ -8,11 +8,14 @@ WITH src AS (
             '/Orders/([0-9]{4}-[0-9]{2}-[0-9]{2})/',
             1
         ) AS load_date
-    FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/*/customer_and_suppliers_by_cities`
+    FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/customer_and_suppliers_by_cities/*/customer_and_suppliers_by_cities`
 )
 
 SELECT *
 FROM src
+
+
+
 
 {% if is_incremental() %}
 WHERE load_date > (SELECT coalesce(max(load_date),'1900-01-01') FROM {{ this }})
