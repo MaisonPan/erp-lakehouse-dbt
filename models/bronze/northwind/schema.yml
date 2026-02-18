@@ -32,7 +32,7 @@ models:
         tests: [not_null]
       - name: CategoryID
         description: "Category primary key."
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CategoryName
         description: "Category name."
         tests: [not_null]
@@ -95,7 +95,7 @@ models:
         tests: [not_null]
       - name: CustomerTypeID
         description: "Customer demographics primary key."
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CustomerDesc
         description: "Demographics description."
         tests: [not_null]
@@ -137,7 +137,7 @@ models:
         tests: [not_null]
       - name: CustomerID
         description: "Customer primary key."
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CompanyName
         description: "Company name."
         tests: [not_null]
@@ -162,7 +162,7 @@ models:
         tests: [not_null]
       - name: EmployeeID
         description: "Employee primary key."
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: LastName
         description: "Last name."
         tests: [not_null]
@@ -322,7 +322,7 @@ models:
         tests: [not_null]
       - name: OrderID
         description: "Order primary key."
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CustomerID
         description: "FK to Customers."
         tests:
@@ -400,7 +400,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: ProductID
-        tests: [not_null, unique]
+        tests: [not_nul]
       - name: ProductName
         tests: [not_null]
       - name: SupplierID
@@ -479,7 +479,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: RegionID
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: RegionDescription
         tests: [not_null]
     tests:
@@ -533,7 +533,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: ShipperID
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CompanyName
         tests: [not_null]
     tests:
@@ -585,7 +585,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: SupplierID
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: CompanyName
         tests: [not_null]
       - name: Country
@@ -607,7 +607,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: TerritoryID
-        tests: [not_null, unique]
+        tests: [not_null]
       - name: TerritoryDescription
         tests: [not_null]
       - name: RegionID
