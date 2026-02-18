@@ -12,6 +12,7 @@ WITH src AS (
     FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Alphabetical_list_of_products/*/Alphabetical_list_of_products`
 )
 
+
 SELECT *
 FROM src
 
