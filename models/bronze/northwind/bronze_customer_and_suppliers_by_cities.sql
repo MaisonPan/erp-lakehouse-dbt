@@ -7,7 +7,8 @@ WITH src AS (
             input_file_name(),
             '/Orders/([0-9]{4}-[0-9]{2}-[0-9]{2})/',
             1
-        ) AS load_date
+        ) AS load_date,
+        input_file_name() as source_file
     FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Customer_and_Suppliers_by_Cities/*/Customer_and_Suppliers_by_Cities`
 )
 
