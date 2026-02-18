@@ -15,7 +15,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
     tests:
-      - dbt_utils.unique_combination_of_columns:
+      - unique_combination_of_columns:
           combination_of_columns: [source_file]
 
   # ==========================================================
@@ -38,7 +38,8 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          arguments:
+          combination_of_columns: [source_file, load_date, CategoryID]
 
   # ==========================================================
   # 03 Category_Sales_for_1997
@@ -56,7 +57,7 @@ models:
         description: "Category label (if present)."
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CategoryName]
 
   # ==========================================================
   # 04 Current_Product_Lists
@@ -78,7 +79,7 @@ models:
               field: ProductID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,ProductID]
 
   # ==========================================================
   # 05 CustomerDemographics
@@ -100,7 +101,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CustomerTypeID]
 
   # ==========================================================
   # 06 Customer_and_Suppliers_by_Cities
@@ -120,7 +121,7 @@ models:
         description: "Company (if present)."
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CompanyName]
 
   # ==========================================================
   # 07 Customers
@@ -145,7 +146,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CustomerID]
 
   # ==========================================================
   # 08 Employees
@@ -171,11 +172,11 @@ models:
       - name: TitleOfCourtesy
         description: "Courtesy title (if present)."
         tests:
-          - dbt_utils.accepted_values:
+          - accepted_values:
               values: ["Mr.", "Mrs.", "Ms.", "Dr."]
     tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+      - unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,EmployeeID]
 
   # ==========================================================
   # 09 Invoices
@@ -209,7 +210,7 @@ models:
               field: CustomerID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID,ProductID]
 
   # ==========================================================
   # 10 Order_Details
@@ -258,9 +259,7 @@ models:
               max_value: 1
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [OrderID, ProductID]
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file, load_date, OrderID, ProductID]
 
   # ==========================================================
   # 11 Order_Details_Extendeds
@@ -286,7 +285,7 @@ models:
               field: ProductID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID,ProductID]
 
   # ==========================================================
   # 12 Order_Subtotals
@@ -307,7 +306,7 @@ models:
               field: OrderID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 13 Orders
@@ -347,7 +346,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 14 Orders_Qries
@@ -420,10 +419,10 @@ models:
               min_value: 0
       - name: Discontinued
         tests:
-          - dbt_utils.accepted_values:
+          - accepted_values:
               values: [0, 1]
     tests:
-      - dbt_utils.unique_combination_of_columns:
+      - unique_combination_of_columns:
           combination_of_columns: [source_file]
 
   # ==========================================================
