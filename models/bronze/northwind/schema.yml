@@ -14,9 +14,15 @@ models:
       - name: source_file
         description: "Full source file path from input_file_name()."
         tests: [not_null]
+      - name: ProductID
+        description: "Reference to Products (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
     tests:
-      - unique_combination_of_columns:
-          combination_of_columns: [source_file]
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductID]
 
   # ==========================================================
   # 02 Categories
@@ -175,7 +181,7 @@ models:
           - accepted_values:
               values: ["Mr.", "Mrs.", "Ms.", "Dr."]
     tests:
-      - unique_combination_of_columns:
+      - dbt_utils.unique_combination_of_columns:
           combination_of_columns: [source_file,load_date,EmployeeID]
 
   # ==========================================================
@@ -367,7 +373,7 @@ models:
               field: OrderID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 15 Product_Sales_for_1997
@@ -385,7 +391,7 @@ models:
         description: "Product name (if present)."
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,ProductName]
 
   # ==========================================================
   # 16 Products
@@ -400,7 +406,7 @@ models:
         description: "Full source file path from input_file_name()."
         tests: [not_null]
       - name: ProductID
-        tests: [not_nul]
+        tests: [not_null]
       - name: ProductName
         tests: [not_null]
       - name: SupplierID
@@ -422,8 +428,8 @@ models:
           - accepted_values:
               values: [0, 1]
     tests:
-      - unique_combination_of_columns:
-          combination_of_columns: [source_file]
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductID]
 
   # ==========================================================
   # 17 Products_Above_Average_Prices
@@ -437,14 +443,14 @@ models:
       - name: source_file
         description: "Full source file path from input_file_name()."
         tests: [not_null]
-      - name: ProductID
+      - name: ProductName
         tests:
           - relationships:
               to: ref('bronze_products')
-              field: ProductID
+              field: ProductName
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,ProductName]
 
   # ==========================================================
   # 18 Products_by_Categories
@@ -464,7 +470,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CategoryName,ProductName]
 
   # ==========================================================
   # 19 Regions
@@ -484,7 +490,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,RegionID]
 
   # ==========================================================
   # 20 Sales_Totals_by_Amounts
@@ -500,7 +506,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 21 Sales_by_Categories
@@ -518,7 +524,7 @@ models:
         description: "Category label (if present)."
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,CategoryID,ProductName]
 
   # ==========================================================
   # 22 Shippers
@@ -538,7 +544,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,ShipperID]
 
   # ==========================================================
   # 23 Summary_of_Sales_by_Quarters
@@ -554,7 +560,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 24 Summary_of_Sales_by_Years
@@ -570,7 +576,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,OrderID]
 
   # ==========================================================
   # 25 Suppliers
@@ -592,7 +598,7 @@ models:
         tests: [not_null]
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,SupplierID]
 
   # ==========================================================
   # 26 Territories
@@ -618,4 +624,4 @@ models:
               field: RegionID
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [source_file]
+          combination_of_columns: [source_file,load_date,TerritoryID]
