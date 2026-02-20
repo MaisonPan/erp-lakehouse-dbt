@@ -180,7 +180,8 @@ Triggered on push to **main**
 **Next improvements**
 
 - [ ] Add **Silver** models (typed & cleaned)  
-- [ ] Add **dbt tests** (not_null, uniqueness, relationships)  
-- [ ] Add **dbt docs** generation + GitHub Pages publish  
-- [ ] Add incremental load strategy per table (snapshot vs delta)  
-- [ ] Add lineage diagram (dbt docs)
+- [ ] Add **Gold** marts (analytics-ready facts/dims + KPI views)
+- [ ] Improve incremental strategy per dataset (append vs merge / SCD)
+- [ ] Publish dbt docs (GitHub Pages)
+- [ ] Add automated data freshness + volume anomaly checks
+- [ ] Add architecture diagram + UC governance notes (GRANTS, ownership)
