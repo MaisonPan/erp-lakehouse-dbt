@@ -414,11 +414,11 @@ models:
           - relationships:
               to: ref('bronze_suppliers')
               field: SupplierID
-      - name: CategoryID
-        tests:
-          - relationships:
-              to: ref('bronze_categories')
-              field: CategoryID
+      #- name: CategoryID
+      #  tests:
+      #    - relationships:
+      #        to: ref('bronze_categories')
+      #        field: CategoryID
       - name: UnitPrice
         tests:
           - dbt_utils.accepted_range:

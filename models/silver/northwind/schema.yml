@@ -1,0 +1,398 @@
+version: 2
+
+models:
+
+  # ==========================================================
+  # Core entity (canonical silver) - strong tests
+  # ==========================================================
+
+  - name: stg_customers
+    description: "Silver canonical customers."
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: company_name
+        tests: [not_null]
+      - name: country
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_orders
+    description: "Silver canonical orders (header) with shipping info."
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: employee_id
+        tests: [not_null]
+      - name: ship_via
+        tests: [not_null]
+      - name: order_date
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_order_details
+    description: "Silver canonical order lines with unit_price/quantity/discount/line_amount."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [order_id, product_id]
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: unit_price
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]
+      - name: discount
+        tests: [not_null]
+      - name: line_amount
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_products
+    description: "Silver canonical products."
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+      - name: product_name
+        tests: [not_null]
+      - name: supplier_id
+        tests:
+          - relationships:
+              to: ref('stg_suppliers')
+              field: supplier_id
+      - name: category_id
+        tests:
+          - relationships:
+              to: ref('stg_categories')
+              field: category_id
+      - name: unit_price
+        tests: [not_null]
+      - name: discontinued
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_categories
+    description: "Silver canonical categories."
+    columns:
+      - name: category_id
+        tests: [not_null, unique]
+      - name: category_name
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_suppliers
+    description: "Silver canonical suppliers."
+    columns:
+      - name: supplier_id
+        tests: [not_null, unique]
+      - name: company_name
+        tests: [not_null]
+      - name: country
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_shippers
+    description: "Silver canonical shippers."
+    columns:
+      - name: shipper_id
+        tests: [not_null, unique]
+      - name: company_name
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_employees
+    description: "Silver canonical employees."
+    columns:
+      - name: employee_id
+        tests: [not_null, unique]
+      - name: last_name
+        tests: [not_null]
+      - name: first_name
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_regions
+    description: "Silver canonical regions."
+    columns:
+      - name: region_id
+        tests: [not_null, unique]
+      - name: region_description
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_territories
+    description: "Silver canonical territories."
+    columns:
+      - name: territory_id
+        tests: [not_null, unique]
+      - name: territory_description
+        tests: [not_null]
+      - name: region_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_regions')
+              field: region_id
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  # Optional: only if you created stg_customerdemographics.sql
+  - name: stg_customerdemographics
+    description: "Silver customer demographics (only joinable if you later ingest the bridge table)."
+    columns:
+      - name: customer_type_id
+        tests: [not_null, unique]
+      - name: customer_desc
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+
+  # ==========================================================
+  # View/report-like silver - lighter tests (still canonical IDs)
+  # ==========================================================
+
+  - name: stg_alphabetical_list_of_products
+    description: "Silver view-like dataset."
+    columns:
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_category_sales_for_1997
+    description: "Silver view-like dataset."
+    columns:
+      - name: category_name
+        tests: [not_null]
+      - name: category_sales
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_current_product_lists
+    description: "Silver view-like dataset."
+    columns:
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_customer_and_suppliers_by_cities
+    description: "Silver view-like dataset."
+    columns:
+      - name: city
+        tests: [not_null]
+      - name: company_name
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_order_details_extendeds
+    description: "Silver view-like dataset with extended_price."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: extended_price
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_order_subtotals
+    description: "Silver view-like dataset."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: subtotal
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_orders_qries
+    description: "Silver view-like dataset."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_product_sales_for_1997
+    description: "Silver view-like dataset."
+    columns:
+      - name: product_sales
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_products_above_average_prices
+    description: "Silver view-like dataset."
+    columns:
+      - name: Product_Name
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: Product_Name
+      - name: unit_price
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_products_by_categories
+    description: "Silver view-like dataset."
+    columns:
+      - name: category_name
+        tests: [not_null]
+      - name: product_name
+        tests: [not_null]
+      - name: Units_In_Stock
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_sales_totals_by_amounts
+    description: "Silver view-like dataset."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: sale_amount
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_sales_by_categories
+    description: "Silver view-like dataset."
+    columns:
+      - name: category_name
+        tests: [not_null]
+      - name: product_sales
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_summary_of_sales_by_quarters
+    description: "Silver view-like dataset."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: subtotal
+        tests: [not_null]
+      - name: shipped_date
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]
+
+  - name: stg_summary_of_sales_by_years
+    description: "Silver view-like dataset."
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: subtotal
+        tests: [not_null]
+      - name: shipped_date
+        tests: [not_null]
+      - name: load_date
+        tests: [not_null]
+      - name: source_file
+        tests: [not_null]

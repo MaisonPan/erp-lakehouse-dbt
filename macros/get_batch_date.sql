@@ -1,8 +1,7 @@
 {% macro get_batch_date() %}
 
     {% set q %}
-        select max(load_date) as batch_date
-        from {{ ref('bronze_orders') }}
+        select batch_date from {{ ref('control_batch_date') }}
     {% endset %}
 
     {% if execute %}
