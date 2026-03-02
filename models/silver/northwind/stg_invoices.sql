@@ -18,8 +18,8 @@ renamed as (
         try_cast(ProductID as int)       as product_id,
 
         cast(Salesperson as string)      as salesperson,
+        to_date(ShippedDate)             as shippeddate,
 
-        -- 你补充的关键字段
         try_cast(UnitPrice as decimal(38,18))    as unit_price,
         try_cast(Quantity as int)                as quantity,
         try_cast(Discount as double)             as discount,
