@@ -1,184 +1,627 @@
 version: 2
 
 models:
-  - name: bronze_categories
-    description: "Bronze raw table for Northwind: Categories"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
 
-  - name: bronze_customerdemographics
-    description: "Bronze raw table for Northwind: CustomerDemographics"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_customers
-    description: "Bronze raw table for Northwind: Customers"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_employees
-    description: "Bronze raw table for Northwind: Employees"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_order_details
-    description: "Bronze raw table for Northwind: Order_Details"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_orders
-    description: "Bronze raw table for Northwind: Orders"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_products
-    description: "Bronze raw table for Northwind: Products"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_regions
-    description: "Bronze raw table for Northwind: Regions"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_shippers
-    description: "Bronze raw table for Northwind: Shippers"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_suppliers
-    description: "Bronze raw table for Northwind: Suppliers"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
-  - name: bronze_territories
-    description: "Bronze raw table for Northwind: Territories"
-    columns:
-      - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
-        tests: [not_null]
-
+  # ==========================================================
+  # 01 Alphabetical_list_of_products
+  # ==========================================================
   - name: bronze_alphabetical_list_of_products
-    description: "Bronze raw table for Northwind: Alphabetical_list_of_products"
+    description: "Bronze dataset for Northwind: Alphabetical_list_of_products (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ProductID
+        description: "Reference to Products (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductID]
 
+  # ==========================================================
+  # 02 Categories
+  # ==========================================================
+  - name: bronze_categories
+    description: "Bronze raw table for Northwind: Categories."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CategoryID
+        description: "Category primary key."
+        tests: [not_null]
+      - name: CategoryName
+        description: "Category name."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+          combination_of_columns: [source_file, load_date, CategoryID]
+
+  # ==========================================================
+  # 03 Category_Sales_for_1997
+  # ==========================================================
   - name: bronze_category_sales_for_1997
-    description: "Bronze raw table for Northwind: Category_Sales_for_1997"
+    description: "Bronze dataset for Northwind: Category_Sales_for_1997 (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CategoryName
+        description: "Category label (if present)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CategoryName]
 
+  # ==========================================================
+  # 04 Current_Product_Lists
+  # ==========================================================
   - name: bronze_current_product_lists
-    description: "Bronze raw table for Northwind: Current_Product_Lists"
+    description: "Bronze dataset for Northwind: Current_Product_Lists (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ProductID
+        description: "Reference to Products (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductID]
 
+  # ==========================================================
+  # 05 CustomerDemographics
+  # ==========================================================
+  - name: bronze_customerdemographics
+    description: "Bronze raw table for Northwind: CustomerDemographics."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CustomerTypeID
+        description: "Customer demographics primary key."
+        tests: [not_null]
+      - name: CustomerDesc
+        description: "Demographics description."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CustomerTypeID]
+
+  # ==========================================================
+  # 06 Customer_and_Suppliers_by_Cities
+  # ==========================================================
   - name: bronze_customer_and_suppliers_by_cities
-    description: "Bronze raw table for Northwind: Customer_and_Suppliers_by_Cities"
+    description: "Bronze dataset for Northwind: Customer_and_Suppliers_by_Cities (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: City
+        description: "City (if present)."
+      - name: CompanyName
+        description: "Company (if present)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CompanyName]
 
+  # ==========================================================
+  # 07 Customers
+  # ==========================================================
+  - name: bronze_customers
+    description: "Bronze raw table for Northwind: Customers."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CustomerID
+        description: "Customer primary key."
+        tests: [not_null]
+      - name: CompanyName
+        description: "Company name."
+        tests: [not_null]
+      - name: Country
+        description: "Customer country."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CustomerID]
+
+  # ==========================================================
+  # 08 Employees
+  # ==========================================================
+  - name: bronze_employees
+    description: "Bronze raw table for Northwind: Employees."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: EmployeeID
+        description: "Employee primary key."
+        tests: [not_null]
+      - name: LastName
+        description: "Last name."
+        tests: [not_null]
+      - name: FirstName
+        description: "First name."
+        tests: [not_null]
+      - name: TitleOfCourtesy
+        description: "Courtesy title (if present)."
+        tests:
+          - accepted_values:
+              values: ["Mr.", "Mrs.", "Ms.", "Dr."]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,EmployeeID]
+
+  # ==========================================================
+  # 09 Invoices
+  # ==========================================================
   - name: bronze_invoices
-    description: "Bronze raw table for Northwind: Invoices"
+    description: "Bronze dataset for Northwind: Invoices (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        description: "Reference to Orders (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_orders')
+              field: OrderID
+      - name: ProductID
+        description: "Reference to Products (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
+      - name: CustomerID
+        description: "Reference to Customers (if present)."
+        tests:
+          - relationships:
+              to: ref('bronze_customers')
+              field: CustomerID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID,ProductID]
 
+  # ==========================================================
+  # 10 Order_Details
+  # ==========================================================
+  - name: bronze_order_details
+    description: "Bronze raw table for Northwind: Order_Details."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        description: "FK to Orders."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('bronze_orders')
+              field: OrderID
+      - name: ProductID
+        description: "FK to Products."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
+      - name: UnitPrice
+        description: "Unit price."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: Quantity
+        description: "Quantity."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: Discount
+        description: "Discount ratio between 0 and 1."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file, load_date, OrderID, ProductID]
+
+  # ==========================================================
+  # 11 Order_Details_Extendeds
+  # ==========================================================
   - name: bronze_order_details_extendeds
-    description: "Bronze raw table for Northwind: Order_Details_Extendeds"
+    description: "Bronze dataset for Northwind: Order_Details_Extendeds (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        tests:
+          - relationships:
+              to: ref('bronze_orders')
+              field: OrderID
+      - name: ProductID
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID,ProductID]
 
+  # ==========================================================
+  # 12 Order_Subtotals
+  # ==========================================================
   - name: bronze_order_subtotals
-    description: "Bronze raw table for Northwind: Order_Subtotals"
+    description: "Bronze dataset for Northwind: Order_Subtotals (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        tests:
+          - relationships:
+              to: ref('bronze_orders')
+              field: OrderID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
 
+  # ==========================================================
+  # 13 Orders
+  # ==========================================================
+  - name: bronze_orders
+    description: "Bronze raw table for Northwind: Orders."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        description: "Order primary key."
+        tests: [not_null]
+      - name: CustomerID
+        description: "FK to Customers."
+        tests:
+          - relationships:
+              to: ref('bronze_customers')
+              field: CustomerID
+      - name: EmployeeID
+        description: "FK to Employees."
+        tests:
+          - relationships:
+              to: ref('bronze_employees')
+              field: EmployeeID
+      - name: ShipVia
+        description: "FK to Shippers."
+        tests:
+          - relationships:
+              to: ref('bronze_shippers')
+              field: ShipperID
+      - name: OrderDate
+        description: "Order date."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
+
+  # ==========================================================
+  # 14 Orders_Qries
+  # ==========================================================
   - name: bronze_orders_qries
-    description: "Bronze raw table for Northwind: Orders_Qries"
+    description: "Bronze dataset for Northwind: Orders_Qries (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: OrderID
+        tests:
+          - relationships:
+              to: ref('bronze_orders')
+              field: OrderID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
 
+  # ==========================================================
+  # 15 Product_Sales_for_1997
+  # ==========================================================
   - name: bronze_product_sales_for_1997
-    description: "Bronze raw table for Northwind: Product_Sales_for_1997"
+    description: "Bronze dataset for Northwind: Product_Sales_for_1997 (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ProductName
+        description: "Product name (if present)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductName]
 
+  # ==========================================================
+  # 16 Products
+  # ==========================================================
+  - name: bronze_products
+    description: "Bronze raw table for Northwind: Products."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ProductID
+        tests: [not_null]
+      - name: ProductName
+        tests: [not_null]
+      - name: SupplierID
+        tests:
+          - relationships:
+              to: ref('bronze_suppliers')
+              field: SupplierID
+      #- name: CategoryID
+      #  tests:
+      #    - relationships:
+      #        to: ref('bronze_categories')
+      #        field: CategoryID
+      - name: UnitPrice
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: Discontinued
+        tests:
+          - accepted_values:
+              values: [0, 1]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductID]
+
+  # ==========================================================
+  # 17 Products_Above_Average_Prices
+  # ==========================================================
   - name: bronze_products_above_average_prices
-    description: "Bronze raw table for Northwind: Products_Above_Average_Prices"
+    description: "Bronze dataset for Northwind: Products_Above_Average_Prices (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ProductName
+        tests:
+          - relationships:
+              to: ref('bronze_products')
+              field: ProductName
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ProductName]
 
+  # ==========================================================
+  # 18 Products_by_Categories
+  # ==========================================================
   - name: bronze_products_by_categories
-    description: "Bronze raw table for Northwind: Products_by_Categories"
+    description: "Bronze dataset for Northwind: Products_by_Categories (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CategoryName
+        tests: [not_null]
+      - name: ProductName
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CategoryName,ProductName]
 
-  - name: bronze_sales_by_categories
-    description: "Bronze raw table for Northwind: Sales_by_Categories"
+  # ==========================================================
+  # 19 Regions
+  # ==========================================================
+  - name: bronze_regions
+    description: "Bronze raw table for Northwind: Regions."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: RegionID
+        tests: [not_null]
+      - name: RegionDescription
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,RegionID]
 
+  # ==========================================================
+  # 20 Sales_Totals_by_Amounts
+  # ==========================================================
   - name: bronze_sales_totals_by_amounts
-    description: "Bronze raw table for Northwind: Sales_Totals_by_Amounts"
+    description: "Bronze dataset for Northwind: Sales_Totals_by_Amounts (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
 
+  # ==========================================================
+  # 21 Sales_by_Categories
+  # ==========================================================
+  - name: bronze_sales_by_categories
+    description: "Bronze dataset for Northwind: Sales_by_Categories (view-like)."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: CategoryName
+        description: "Category label (if present)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,CategoryID,ProductName]
+
+  # ==========================================================
+  # 22 Shippers
+  # ==========================================================
+  - name: bronze_shippers
+    description: "Bronze raw table for Northwind: Shippers."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: ShipperID
+        tests: [not_null]
+      - name: CompanyName
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,ShipperID]
+
+  # ==========================================================
+  # 23 Summary_of_Sales_by_Quarters
+  # ==========================================================
   - name: bronze_summary_of_sales_by_quarters
-    description: "Bronze raw table for Northwind: Summary_of_Sales_by_Quarters"
+    description: "Bronze dataset for Northwind: Summary_of_Sales_by_Quarters (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
 
+  # ==========================================================
+  # 24 Summary_of_Sales_by_Years
+  # ==========================================================
   - name: bronze_summary_of_sales_by_years
-    description: "Bronze raw table for Northwind: Summary_of_Sales_by_Years"
+    description: "Bronze dataset for Northwind: Summary_of_Sales_by_Years (view-like)."
     columns:
       - name: load_date
-        description: "Date extracted from file path (YYYY-MM-DD)"
+        description: "Date extracted from file path (YYYY-MM-DD)."
         tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,OrderID]
+
+  # ==========================================================
+  # 25 Suppliers
+  # ==========================================================
+  - name: bronze_suppliers
+    description: "Bronze raw table for Northwind: Suppliers."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: SupplierID
+        tests: [not_null]
+      - name: CompanyName
+        tests: [not_null]
+      - name: Country
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,SupplierID]
+
+  # ==========================================================
+  # 26 Territories
+  # ==========================================================
+  - name: bronze_territories
+    description: "Bronze raw table for Northwind: Territories."
+    columns:
+      - name: load_date
+        description: "Date extracted from file path (YYYY-MM-DD)."
+        tests: [not_null]
+      - name: source_file
+        description: "Full source file path from input_file_name()."
+        tests: [not_null]
+      - name: TerritoryID
+        tests: [not_null]
+      - name: TerritoryDescription
+        tests: [not_null]
+      - name: RegionID
+        tests:
+          - not_null
+          - relationships:
+              to: ref('bronze_regions')
+              field: RegionID
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [source_file,load_date,TerritoryID]

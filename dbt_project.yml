@@ -47,6 +47,7 @@ models:
     bronze:
       +schema: bronze
       +materialized: incremental
+      +file_format: delta
 
     # =========================
     # SILVER 
@@ -54,6 +55,7 @@ models:
     silver:
       +schema: silver
       +materialized: table
+      +file_format: delta
 
     # =========================
     # GOLD 
@@ -61,3 +63,4 @@ models:
     gold:
       +schema: gold
       +materialized: table
+      +file_format: delta

@@ -1,19 +1,7 @@
-{{ config(materialized='incremental') }}
+{{ config(materialized='incremental', on_schema_change='append_new_columns') }}
 
-WITH src AS (
-    SELECT
-        *,
-        regexp_extract(
-            input_file_name(),
-            '/Orders/([0-9]{4}-[0-9]{2}-[0-9]{2})/',
-            1
-        ) AS load_date
-    FROM parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Customers/*/Customers`
-)
-
-SELECT *
-FROM src
+{{ northwind_subject('Customers') }}
 
 {% if is_incremental() %}
-WHERE load_date > (SELECT coalesce(max(load_date),'1900-01-01') FROM {{ this }})
+where load_date > (select coalesce(max(load_date), date('1900-01-01')) from {{ this }})
 {% endif %}
