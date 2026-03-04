@@ -3,7 +3,7 @@
 with bounds as (
   select
     min(order_date) as min_date,
-    max(order_date) as max_date
+    (select max(shipped_date) from {{ ref('stg_invoices') }})  as max_date
   from {{ ref('stg_orders') }}
 ),
 

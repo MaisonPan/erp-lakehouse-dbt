@@ -17,8 +17,8 @@ renamed as (
         cast(CustomerID as string)       as customer_id,
         try_cast(ProductID as int)       as product_id,
 
-        cast(Salesperson as string)      as salesperson,
-        to_date(ShippedDate)             as shippeddate,
+        cast(Salesperson as string)      as sales_person,
+        to_date(ShippedDate)             as shipped_date,
 
         try_cast(UnitPrice as decimal(38,18))    as unit_price,
         try_cast(Quantity as int)                as quantity,
