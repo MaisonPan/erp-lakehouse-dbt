@@ -324,10 +324,11 @@ northwind-lakehouse-dbt-databricks
 │  │  │     ├─ bronze_orders.sql
 │  │  │     └─ schema.yml
 │  │  ├─ silver/
+│  │  │  └─ northwind/
 │  │  └─ gold/
-│  │     ├─ dimensions/
-│  │     └─ facts/
-│  │
+│  │     └─ northwind/
+│  │        └─BIStarSchema/
+│  │            
 │  ├─ macros/
 │  └─ tests/
 │
@@ -427,7 +428,7 @@ Triggered on push to **main**
 **Add Repository Variables (optional but recommended)**
 
 - **DBT_CATALOG** (e.g., erp_northwind)  
-- **DBT_SCHEMA_DEV** (e.g., hongwei)  
+- **DBT_SCHEMA_DEV** (e.g., dev)  
 - **DBT_SCHEMA_PROD** (e.g., prod)  
 
 ---
@@ -439,14 +440,3 @@ Triggered on push to **main**
 - Prefer **SQL Warehouse auto-stop** (10–15 minutes)  
 - Avoid **always-on clusters** for development  
 - Use **incremental models** to prevent full historical scans  
-
----
-
-## Roadmap
-
-**Next improvements**
-
-- [ ] Improve incremental strategy per dataset (append vs merge / SCD)
-- [ ] Publish dbt docs (GitHub Pages)
-- [ ] Add automated data freshness + volume anomaly checks
-- [ ] Add architecture diagram + UC governance notes (GRANTS, ownership)
