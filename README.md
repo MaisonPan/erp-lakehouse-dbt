@@ -309,12 +309,19 @@ northwind-lakehouse-dbt-databricks
 │  │  ├─ bronze/
 │  │  │  └─ northwind/
 │  │  │     ├─ bronze_orders.sql
+│  │  │     ├─ ...
 │  │  │     └─ schema.yml
 │  │  ├─ silver/
 │  │  │  └─ northwind/
+│  │  │     ├─ stg_orders.sql
+│  │  │     ├─ ...
+│  │  │     └─ schema.yml
 │  │  └─ gold/
 │  │     └─ northwind/
 │  │        └─BIStarSchema/
+│  │          ├─ fact_order.sql
+│  │          ├─ ...
+│  │          └─ schema.yml
 │  │            
 │  ├─ macros/
 │  └─ tests/
