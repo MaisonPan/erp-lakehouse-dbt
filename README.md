@@ -79,7 +79,6 @@ In a real enterprise scenario, this layer would typically include systems such a
 
 For this demo, the dataset is exported and ingested into the platform using **Azure Data Factory.**
 
----
 
 ### 2. Data Ingestion – Azure Data Factory
 
@@ -110,7 +109,6 @@ This structure supports:
 
 - traceable ingestion.
 
----
 
 ### 3. Data Landing Zone – ADLS Gen2
 
@@ -126,7 +124,6 @@ Characteristics:
 
 This zone acts as the **data lake entry point** for the Lakehouse platform.
 
----
 
 ### 4. Databricks Lakehouse
 
@@ -150,7 +147,6 @@ Key components:
 
 - scalable metadata management
 
----
 
 ### 5. Unity Catalog – Governance Layer
 
@@ -179,8 +175,6 @@ external locations
 ```
 External locations allow Databricks to access ADLS **without embedding storage keys in code.**
 
----
-
 ### 6. Data Transformation – dbt
 
 **dbt (Data Build Tool)** is used for SQL-based data transformation.
@@ -205,7 +199,6 @@ source_file
 ```
 
 These support **lineage and debugging.**
-
 
 #### Silver Layer
 
@@ -250,8 +243,6 @@ fact_invoice_freight
 
 These models power downstream analytics.
 
----
-
 ### 7. Data Quality
 
 dbt provides built-in data quality testing.
@@ -274,8 +265,6 @@ These tests ensure:
 
 - reliable analytical models.
 
----
-
 ### 8. Query Layer – Databricks SQL
 
 Databricks **SQL Warehouse** exposes the Gold layer for analytics tools.
@@ -289,8 +278,6 @@ Benefits:
 - secure access via Unity Catalog
 
 This layer acts as the analytics endpoint.
-
----
 
 ### 9. Analytics – Power BI
 
