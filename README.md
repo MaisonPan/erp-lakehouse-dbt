@@ -10,7 +10,7 @@ This project simulates a production-style analytics platform, including ingestio
 
 This repository demonstrates how to build a **secure, scalable Lakehouse architecture** using Azure technologies and dbt.
 
-###Technologies used
+### Technologies used
 
 | Layer            | Technology         |
 | ---------------- | ------------------ |
@@ -37,10 +37,27 @@ This repository demonstrates how to build a **secure, scalable Lakehouse archite
 ## Architecture
 
 **Flow**
-1. **ADF** writes daily snapshots to ADLS Gen2 (landing)
-2. **Unity Catalog External Location** grants Databricks secure access to ADLS
-3. **dbt** reads parquet from landing and writes **Delta** tables to Bronze schema
-4. **CI/CD** validates changes on PR and deploys on merge to `main`
+
+Source Data (Northwind)
+        │
+        ▼
+Azure Data Factory
+        │
+        ▼
+ADLS Gen2 Landing Zone (Parquet)
+        │
+        ▼
+Unity Catalog External Location
+        │
+        ▼
+Databricks Lakehouse
+        │
+        ▼
+dbt Transformation
+(Bronze → Silver → Gold)
+        │
+        ▼
+Power BI Analytics
 
 **Data layout (landing)**
 Example:
