@@ -24,7 +24,7 @@ jobs:
       - name: Create profiles.yml (dev)
         run: |
           mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml << 'EOF'
+          cat > ~/.dbt/profiles.yml << EOF
           default:
             target: dev
             outputs:
