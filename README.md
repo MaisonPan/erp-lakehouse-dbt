@@ -206,7 +206,6 @@ source_file
 
 These support **lineage and debugging.**
 
----
 
 #### Silver Layer
 
@@ -228,7 +227,6 @@ Typical transformations:
 
 - data validation
 
----
 
 #### Gold Layer
 
@@ -314,6 +312,7 @@ The dashboard provides:
 
 ```md
 ## Repository structure
+
 ```text
 northwind-lakehouse-dbt-databricks
 │
