@@ -254,28 +254,61 @@ These models power downstream analytics.
 
 ---
 
+### 7. Data Quality
 
-### Key design choices
-- **No secrets in code**: access via UC External Location (Managed Identity / Credential)
-- **Bronze is incremental**: avoids re-scanning full history
-- **Audit columns on ingestion**:
-  - `load_date` parsed from folder date
-  - `source_file` from `input_file_name()` for lineage
+dbt provides built-in data quality testing.
+
+Examples implemented:
+
+- not_null
+
+- unique
+
+- relationships
+
+- accepted value checks
+
+These tests ensure:
+
+- referential integrity
+
+- schema stability
+
+- reliable analytical models.
 
 ---
 
-## Current status (implemented)
+### 8. Query Layer – Databricks SQL
 
-✅ Landing data available in ADLS (date-partitioned Parquet)  
-✅ Databricks SQL can read landing parquet paths (including wildcards)  
-✅ dbt project structure created with Bronze/Silver/Gold schemas  
-✅ **Bronze Northwind coverage: 26 datasets**
-- `models/bronze/northwind/` contains Bronze models and tests
-- `models/bronze/northwind/schema.yml` includes:
-  - `not_null` checks for `load_date` / `source_file`
-  - key constraints for core entity tables (e.g., Orders, Products, Customers)
-  - relationships to enforce referential integrity where stable
-  - `dbt_utils` helpers for range and accepted values where applicable
+Databricks **SQL Warehouse** exposes the Gold layer for analytics tools.
+
+Benefits:
+
+- serverless scaling
+
+- optimized BI queries
+
+- secure access via Unity Catalog
+
+This layer acts as the analytics endpoint.
+
+---
+
+### 9. Analytics – Power BI
+
+Power BI connects to the **Databricks SQL endpoint.**
+
+The dashboard provides:
+
+- Revenue KPIs
+
+- QoQ growth analysis
+
+- product performance
+
+- category analysis
+
+- geographic sales distribution
 
 ---
 
