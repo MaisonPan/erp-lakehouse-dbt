@@ -1,13 +1,26 @@
 # northwind-lakehouse-dbt-databricks
 
-An end-to-end, production-style Lakehouse demo on Azure.
-
-**ADF** lands Northwind extracts to **ADLS Gen2** as date-partitioned **Parquet**
-**Databricks (Unity Catalog)** reads landing data via **External Locations** (no storage keys in code).  
-**dbt** builds **Bronze (Delta)** incremental models (and will extend to **Silver/Gold**).  
-CI/CD is implemented with **GitHub Actions** (PR checks + main deployments).
-
+An **end-to-end Lakehouse analytics project on Azure**, demonstrating a modern data stack:
+**ADF** → **ADLS Gen2** → **Databricks (Unity Catalog)** → **dbt** → **Power BI**
+This project simulates a production-style analytics platform, including ingestion, transformation, governance, CI/CD, and a business intelligence layer.
 ---
+
+## Project Overview
+
+This repository demonstrates how to build a **secure, scalable Lakehouse architecture** using Azure technologies and dbt.
+
+###Technologies used
+
+| Layer            | Technology         |
+| ---------------- | ------------------ |
+| Data ingestion   | Azure Data Factory |
+| Storage          | ADLS Gen2          |
+| Lakehouse engine | Azure Databricks   |
+| Governance       | Unity Catalog      |
+| Transformation   | dbt                |
+| CI/CD            | GitHub Actions     |
+| Analytics        | Power BI           |
+
 
 ## What this project demonstrates
 
@@ -61,6 +74,8 @@ abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/
 ```md
 ## Repository structure
 ```text
+northwind-lakehouse-dbt-databricks
+│
 ├─ dbt/
 │  ├─ dbt_project.yml
 │  ├─ packages.yml
@@ -68,16 +83,29 @@ abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/
 │  │  ├─ bronze/
 │  │  │  └─ northwind/
 │  │  │     ├─ bronze_orders.sql
-│  │  │     ├─ ...
 │  │  │     └─ schema.yml
 │  │  ├─ silver/
 │  │  └─ gold/
+│  │     ├─ dimensions/
+│  │     └─ facts/
+│  │
 │  ├─ macros/
 │  └─ tests/
 │
+├─ analytics/
+│  └─ powerbi/
+│     ├─ food_report.pbix
+│     └─ dashboard.png
+│
+├─ docs/
+│  ├─ architecture.png
+│  └─ star_schema.png
+│
 ├─ .github/workflows/
-   ├─ ci.yml
-   └─ cd.yml
+│  ├─ ci.yml
+│  └─ cd.yml
+│
+└─ README.md
 ```
 
 ---
