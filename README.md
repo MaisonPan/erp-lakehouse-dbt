@@ -110,6 +110,151 @@ This structure supports:
 
 - traceable ingestion.
 
+---
+
+### 3. Data Landing Zone – ADLS Gen2
+
+All raw data is stored in **Azure Data Lake Storage Gen2.**
+
+Characteristics:
+
+- stored as **Parquet files**
+
+- partitioned by ingestion date
+
+- immutable raw layer
+
+This zone acts as the **data lake entry point** for the Lakehouse platform.
+
+---
+
+### 4. Databricks Lakehouse
+
+Azure Databricks provides the **Lakehouse compute and storage layer.**
+
+Key components:
+
+**Storage Layer**
+
+- ADLS Gen2
+
+- Parquet and Delta Lake formats
+
+**Transactional Metadata**
+
+- Delta Lake
+
+- ACID transactions
+
+- time travel
+
+- scalable metadata management
+
+---
+
+### 5. Unity Catalog – Governance Layer
+
+The platform uses **Unity Catalog** for centralized governance.
+
+Capabilities include:
+
+- access control
+
+- data lineage
+
+- auditing
+
+- data discovery
+
+- Delta Sharing
+
+Unity Catalog manages:
+
+```text
+catalog
+schemas
+tables
+permissions
+external locations
+```
+External locations allow Databricks to access ADLS **without embedding storage keys in code.**
+
+---
+
+### 6. Data Transformation – dbt
+
+**dbt (Data Build Tool)** is used for SQL-based data transformation.
+
+The project implements the **Medallion architecture:**
+
+#### Bronze Layer
+
+Purpose:
+
+- ingest raw landing data
+
+- minimal transformation
+
+- convert Parquet → Delta
+
+Additional metadata columns are added:
+
+```text
+load_date
+source_file
+```
+
+These support **lineage and debugging.**
+
+---
+
+#### Silver Layer
+
+Purpose:
+
+- clean and standardize data
+
+- apply business rules
+
+- enforce data quality
+
+Typical transformations:
+
+- type casting
+
+- deduplication
+
+- null handling
+
+- data validation
+
+---
+
+#### Gold Layer
+
+Purpose:
+
+- create analytics-ready models
+
+The Gold layer follows a Star Schema design.
+
+Example models:
+
+```text
+dim_date
+dim_product
+dim_customer
+
+fact_orders
+fact_invoice
+fact_invoice_freight
+```
+
+These models power downstream analytics.
+
+---
+
+
 ### Key design choices
 - **No secrets in code**: access via UC External Location (Managed Identity / Credential)
 - **Bronze is incremental**: avoids re-scanning full history
