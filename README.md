@@ -38,6 +38,7 @@ This repository demonstrates how to build a **secure, scalable Lakehouse archite
 
 **Flow**
 
+```text
 Source Data (Northwind)
         │
         ▼
@@ -58,6 +59,7 @@ dbt Transformation
         │
         ▼
 Power BI Analytics
+```
 
 **Data layout (landing)**
 Example:
