@@ -47,8 +47,5 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
-      - name: dbt compile (gold BIStarSchema + upstream)
-        run: dbt compile -t dev --select path:models/gold/northwind/BIStarSchema+
-
-      - name: dbt build (gold BIStarSchema + upstream)
-        run: dbt build -t dev --select path:models/gold/northwind/BIStarSchema+
+      - name: dbt build (slim ci)
+        run: dbt build -t dev --select state:modified+ --defer --state artifacts
