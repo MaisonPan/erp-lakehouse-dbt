@@ -1,7 +1,9 @@
 # northwind-lakehouse-dbt-databricks
 
 An **end-to-end Lakehouse analytics project on Azure**, demonstrating a modern data stack:
-**ADF → ADLS Gen2 → Databricks (Unity Catalog) → dbt → Power BI**
+
+**ADF → ADLS Gen2 → Databricks (Unity Catalog) → dbt → SQL Endpoint → Power BI**
+
 This project simulates a production-style analytics platform, including ingestion, transformation, governance, CI/CD, and a business intelligence layer.
 
 ---
@@ -23,49 +25,90 @@ This repository demonstrates how to build a **secure, scalable Lakehouse archite
 | Analytics        | Power BI           |
 
 
-## What this project demonstrates
-
-- **Cloud ingestion pattern**: ADF → ADLS landing zone (daily folders)
-- **Secure access**: Unity Catalog External Location (no account keys in code)
-- **Lakehouse modeling**: Parquet landing → Delta Bronze (incremental)
-- **Data quality & observability basics**: dbt tests + reproducible builds + docs
-- **CI/CD**: GitHub Actions CI on PR, CD on merge to `main`
-- **Cost-aware development**: SQL Warehouse Serverless vs clusters (guidance included)
-
 ---
 
 ## Architecture
 
-**Flow**
+The platform follows a **modern Lakehouse architecture on Azure**, inspired by the deployed solution architecture shown below.
+
+The architecture integrates **data ingestion, storage, transformation, governance, and analytics** into a unified data platform.
+
+## End-to-End Data Flow
+
+The pipeline consists of the following stages:
 
 ```text
-Source Data (Northwind)
-        │
-        ▼
-Azure Data Factory
-        │
-        ▼
-ADLS Gen2 Landing Zone (Parquet)
-        │
-        ▼
-Unity Catalog External Location
-        │
-        ▼
-Databricks Lakehouse
-        │
-        ▼
-dbt Transformation
-(Bronze → Silver → Gold)
-        │
-        ▼
-Power BI Analytics
+        Source Data (Northwind)
+                │
+                ▼
+        Azure Data Factory
+                │
+                ▼
+        ADLS Gen2 Landing Zone (Parquet)
+                │
+                ▼
+        Unity Catalog External Location
+                │
+                ▼
+        Databricks Lakehouse
+                │
+                ▼
+        dbt Transformation
+        (Bronze → Silver → Gold)
+                │
+                ▼
+        Databricks SQL Endpoint
+                │
+                ▼
+        Power BI Analytics
 ```
 
-**Data layout (landing)**
-Example:
+### 1. Data Source
+
+In this demo project, the data source is **Northwind operational data extracts.**
+
+In a real enterprise scenario, this layer would typically include systems such as:
+
+- ERP systems (SAP / Dynamics / Oracle)
+
+- CRM platforms
+
+- operational databases
+
+- external APIs
+
+For this demo, the dataset is exported and ingested into the platform using **Azure Data Factory.**
+
+---
+
+### 2. Data Ingestion – Azure Data Factory
+
+Azure Data Factory (ADF) orchestrates the ingestion pipeline.
+
+Responsibilities:
+
+- Extract source data
+
+- Write snapshots to the **ADLS landing zone**
+
+- Partition data by ingestion date
+
+- Enable incremental ingestion
+
+Example landing structure:
+
+```text
 abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/
 2026-02-12/Orders/.parquet
 2026-02-13/Orders/.parquet
+```
+This structure supports:
+
+- incremental processing
+
+- historical reprocessing
+
+- traceable ingestion.
 
 ### Key design choices
 - **No secrets in code**: access via UC External Location (Managed Identity / Credential)
@@ -227,8 +270,6 @@ Triggered on push to **main**
 
 **Next improvements**
 
-- [ ] Add **Silver** models (typed & cleaned)  
-- [ ] Add **Gold** marts (analytics-ready facts/dims + KPI views)
 - [ ] Improve incremental strategy per dataset (append vs merge / SCD)
 - [ ] Publish dbt docs (GitHub Pages)
 - [ ] Add automated data freshness + volume anomaly checks
