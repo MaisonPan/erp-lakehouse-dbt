@@ -1,8 +1,9 @@
 # northwind-lakehouse-dbt-databricks
 
 An **end-to-end Lakehouse analytics project on Azure**, demonstrating a modern data stack:
-**ADF** → **ADLS Gen2** → **Databricks (Unity Catalog)** → **dbt** → **Power BI**
+**ADF → ADLS Gen2 → Databricks (Unity Catalog) → dbt → Power BI**
 This project simulates a production-style analytics platform, including ingestion, transformation, governance, CI/CD, and a business intelligence layer.
+
 ---
 
 ## Project Overview
