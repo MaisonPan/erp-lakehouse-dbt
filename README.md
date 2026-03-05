@@ -310,10 +310,9 @@ The dashboard provides:
 
 ---
 
-```md
 ## Repository structure
 
-```text
+```md
 northwind-lakehouse-dbt-databricks
 │
 ├─ dbt/
