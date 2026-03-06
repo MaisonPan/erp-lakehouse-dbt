@@ -53,3 +53,24 @@ jobs:
 
       - name: dbt build (dev)
         run: dbt build -t dev
+
+      - name: Download baseline manifest
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: cd.yml
+          name: baseline-manifest
+          path: artifacts
+          branch: main
+          if_no_artifact_found: warn
+
+      - name: Show downloaded files
+        run: ls -R artifacts || true
+
+      - name: dbt build (slim ci)
+        run: |
+          if [ -f artifacts/manifest.json ]; then
+            dbt build -t dev --select state:modified+ --defer --state artifacts
+          else
+            echo "No baseline manifest found, fallback to full build"
+            dbt build -t dev
+          fi
