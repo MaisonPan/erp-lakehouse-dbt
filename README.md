@@ -431,6 +431,7 @@ Triggered on push to **main**
 
 **Recommended practices**
 
+
 - Prefer **SQL Warehouse auto-stop** (10–15 minutes)  
 - Avoid **always-on clusters** for development  
 - Use **incremental models** to prevent full historical scans  
