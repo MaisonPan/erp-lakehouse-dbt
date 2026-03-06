@@ -1,66 +1,307 @@
 # northwind-lakehouse-dbt-databricks
 
-An end-to-end, production-style Lakehouse demo on Azure.
+An **end-to-end Lakehouse analytics project on Azure**, demonstrating a modern data stack:
 
-**ADF** lands Northwind extracts to **ADLS Gen2** as date-partitioned **Parquet**
-**Databricks (Unity Catalog)** reads landing data via **External Locations** (no storage keys in code).  
-**dbt** builds **Bronze (Delta)** incremental models (and will extend to **Silver/Gold**).  
-CI/CD is implemented with **GitHub Actions** (PR checks + main deployments).
+**ADF → ADLS Gen2 → Databricks (Unity Catalog) → dbt → SQL Endpoint → Power BI**
+
+This project simulates a production-style analytics platform, including ingestion, transformation, governance, CI/CD, and a business intelligence layer.
 
 ---
 
-## What this project demonstrates
+## Project Overview
 
-- **Cloud ingestion pattern**: ADF → ADLS landing zone (daily folders)
-- **Secure access**: Unity Catalog External Location (no account keys in code)
-- **Lakehouse modeling**: Parquet landing → Delta Bronze (incremental)
-- **Data quality & observability basics**: dbt tests + reproducible builds + docs
-- **CI/CD**: GitHub Actions CI on PR, CD on merge to `main`
-- **Cost-aware development**: SQL Warehouse Serverless vs clusters (guidance included)
+This repository demonstrates how to build a **secure, scalable Lakehouse architecture** using Azure technologies and dbt.
+
+### Technologies used
+
+| Layer            | Technology         |
+| ---------------- | ------------------ |
+| Data ingestion   | Azure Data Factory |
+| Storage          | ADLS Gen2          |
+| Lakehouse engine | Azure Databricks   |
+| Governance       | Unity Catalog      |
+| Transformation   | dbt                |
+| CI/CD            | GitHub Actions     |
+| Analytics        | Power BI           |
+
 
 ---
 
 ## Architecture
 
-**Flow**
-1. **ADF** writes daily snapshots to ADLS Gen2 (landing)
-2. **Unity Catalog External Location** grants Databricks secure access to ADLS
-3. **dbt** reads parquet from landing and writes **Delta** tables to Bronze schema
-4. **CI/CD** validates changes on PR and deploys on merge to `main`
+The platform follows a **modern Lakehouse architecture on Azure**, inspired by the deployed solution architecture shown below.
 
-**Data layout (landing)**
-Example:
+The architecture integrates **data ingestion, storage, transformation, governance, and analytics** into a unified data platform.
+
+## End-to-End Data Flow
+
+The pipeline consists of the following stages:
+
+```text
+        Source Data (Northwind)
+                │
+                ▼
+        Azure Data Factory
+                │
+                ▼
+        ADLS Gen2 Landing Zone (Parquet)
+                │
+                ▼
+        Unity Catalog External Location
+                │
+                ▼
+        Databricks Lakehouse
+                │
+                ▼
+        dbt Transformation
+        (Bronze → Silver → Gold)
+                │
+                ▼
+        Databricks SQL Endpoint
+                │
+                ▼
+        Power BI Analytics
+```
+
+### 1. Data Source
+
+In this demo project, the data source is **Northwind operational data extracts.**
+
+In a real enterprise scenario, this layer would typically include systems such as:
+
+- ERP systems (SAP / Dynamics / Oracle)
+
+- CRM platforms
+
+- operational databases
+
+- external APIs
+
+For this demo, the dataset is exported and ingested into the platform using **Azure Data Factory.**
+
+
+### 2. Data Ingestion – Azure Data Factory
+
+Azure Data Factory (ADF) orchestrates the ingestion pipeline.
+
+Responsibilities:
+
+- Extract source data
+
+- Write snapshots to the **ADLS landing zone**
+
+- Partition data by ingestion date
+
+- Enable incremental ingestion
+
+Example landing structure:
+
+```text
 abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/
 2026-02-12/Orders/.parquet
 2026-02-13/Orders/.parquet
+```
+This structure supports:
 
-### Key design choices
-- **No secrets in code**: access via UC External Location (Managed Identity / Credential)
-- **Bronze is incremental**: avoids re-scanning full history
-- **Audit columns on ingestion**:
-  - `load_date` parsed from folder date
-  - `source_file` from `input_file_name()` for lineage
+- incremental processing
+
+- historical reprocessing
+
+- traceable ingestion.
+
+
+### 3. Data Landing Zone – ADLS Gen2
+
+All raw data is stored in **Azure Data Lake Storage Gen2.**
+
+Characteristics:
+
+- stored as **Parquet files**
+
+- partitioned by ingestion date
+
+- immutable raw layer
+
+This zone acts as the **data lake entry point** for the Lakehouse platform.
+
+
+### 4. Databricks Lakehouse
+
+Azure Databricks provides the **Lakehouse compute and storage layer.**
+
+Key components:
+
+**Storage Layer**
+
+- ADLS Gen2
+
+- Parquet and Delta Lake formats
+
+**Transactional Metadata**
+
+- Delta Lake
+
+- ACID transactions
+
+- time travel
+
+- scalable metadata management
+
+
+### 5. Unity Catalog – Governance Layer
+
+The platform uses **Unity Catalog** for centralized governance.
+
+Capabilities include:
+
+- access control
+
+- data lineage
+
+- auditing
+
+- data discovery
+
+- Delta Sharing
+
+Unity Catalog manages:
+
+```text
+catalog
+schemas
+tables
+permissions
+external locations
+```
+External locations allow Databricks to access ADLS **without embedding storage keys in code.**
+
+### 6. Data Transformation – dbt
+
+**dbt (Data Build Tool)** is used for SQL-based data transformation.
+
+The project implements the **Medallion architecture:**
+
+#### Bronze Layer
+
+Purpose:
+
+- ingest raw landing data
+
+- minimal transformation
+
+- convert Parquet → Delta
+
+Additional metadata columns are added:
+
+```text
+load_date
+source_file
+```
+
+These support **lineage and debugging.**
+
+#### Silver Layer
+
+Purpose:
+
+- clean and standardize data
+
+- apply business rules
+
+- enforce data quality
+
+Typical transformations:
+
+- type casting
+
+- deduplication
+
+- null handling
+
+- data validation
+
+
+#### Gold Layer
+
+Purpose:
+
+- create analytics-ready models
+
+The Gold layer follows a Star Schema design.
+
+Example models:
+
+```text
+dim_date
+dim_product
+dim_customer
+
+fact_orders
+fact_invoice
+fact_invoice_freight
+```
+
+These models power downstream analytics.
+
+### 7. Data Quality
+
+dbt provides built-in data quality testing.
+
+Examples implemented:
+
+- not_null
+
+- unique
+
+- relationships
+
+- accepted value checks
+
+These tests ensure:
+
+- referential integrity
+
+- schema stability
+
+- reliable analytical models.
+
+### 8. Query Layer – Databricks SQL
+
+Databricks **SQL Warehouse** exposes the Gold layer for analytics tools.
+
+Benefits:
+
+- serverless scaling
+
+- optimized BI queries
+
+- secure access via Unity Catalog
+
+This layer acts as the analytics endpoint.
+
+### 9. Analytics – Power BI
+
+Power BI connects to the **Databricks SQL endpoint.**
+
+The dashboard provides:
+
+- Revenue KPIs
+
+- QoQ growth analysis
+
+- product performance
+
+- category analysis
+
+- geographic sales distribution
 
 ---
 
-## Current status (implemented)
-
-✅ Landing data available in ADLS (date-partitioned Parquet)  
-✅ Databricks SQL can read landing parquet paths (including wildcards)  
-✅ dbt project structure created with Bronze/Silver/Gold schemas  
-✅ **Bronze Northwind coverage: 26 datasets**
-- `models/bronze/northwind/` contains Bronze models and tests
-- `models/bronze/northwind/schema.yml` includes:
-  - `not_null` checks for `load_date` / `source_file`
-  - key constraints for core entity tables (e.g., Orders, Products, Customers)
-  - relationships to enforce referential integrity where stable
-  - `dbt_utils` helpers for range and accepted values where applicable
-
----
+## Repository structure
 
 ```md
-## Repository structure
-```text
+northwind-lakehouse-dbt-databricks
+│
 ├─ dbt/
 │  ├─ dbt_project.yml
 │  ├─ packages.yml
@@ -71,13 +312,34 @@ abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/
 │  │  │     ├─ ...
 │  │  │     └─ schema.yml
 │  │  ├─ silver/
+│  │  │  └─ northwind/
+│  │  │     ├─ stg_orders.sql
+│  │  │     ├─ ...
+│  │  │     └─ schema.yml
 │  │  └─ gold/
+│  │     └─ northwind/
+│  │        └─BIStarSchema/
+│  │          ├─ fact_order.sql
+│  │          ├─ ...
+│  │          └─ schema.yml
+│  │            
 │  ├─ macros/
 │  └─ tests/
 │
+├─ analytics/
+│  └─ powerbi/
+│     ├─ food_report.pbix
+│     └─ dashboard.png
+│
+├─ docs/
+│  ├─ architecture.png
+│  └─ star_schema.png
+│
 ├─ .github/workflows/
-   ├─ ci.yml
-   └─ cd.yml
+│  ├─ ci.yml
+│  └─ cd.yml
+│
+└─ README.md
 ```
 
 ---
@@ -160,7 +422,7 @@ Triggered on push to **main**
 **Add Repository Variables (optional but recommended)**
 
 - **DBT_CATALOG** (e.g., erp_northwind)  
-- **DBT_SCHEMA_DEV** (e.g., hongwei)  
+- **DBT_SCHEMA_DEV** (e.g., dev)  
 - **DBT_SCHEMA_PROD** (e.g., prod)  
 
 ---
@@ -172,16 +434,3 @@ Triggered on push to **main**
 - Prefer **SQL Warehouse auto-stop** (10–15 minutes)  
 - Avoid **always-on clusters** for development  
 - Use **incremental models** to prevent full historical scans  
-
----
-
-## Roadmap
-
-**Next improvements**
-
-- [ ] Add **Silver** models (typed & cleaned)  
-- [ ] Add **Gold** marts (analytics-ready facts/dims + KPI views)
-- [ ] Improve incremental strategy per dataset (append vs merge / SCD)
-- [ ] Publish dbt docs (GitHub Pages)
-- [ ] Add automated data freshness + volume anomaly checks
-- [ ] Add architecture diagram + UC governance notes (GRANTS, ownership)

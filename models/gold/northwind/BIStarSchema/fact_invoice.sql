@@ -12,7 +12,7 @@ select
     customer_id,
     product_id,
 
-    shippedDate as shipped_date,
+    shipped_date,
 
     quantity    as invoiced_qty,
     unit_price  as invoiced_unit_price,
