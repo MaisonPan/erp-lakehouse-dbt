@@ -48,11 +48,11 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
+      - name: Create artifacts folder
+        run: mkdir -p artifacts
+
       - name: dbt debug
         run: dbt debug -t dev
-
-      - name: dbt build (dev)
-        run: dbt build -t dev
 
       - name: Download baseline manifest
         uses: dawidd6/action-download-artifact@v3
