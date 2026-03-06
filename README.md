@@ -398,17 +398,82 @@ parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/*/O
 
 ## CI/CD (GitHub Actions)
 
-**CI – Pull Request validation**
+This project implements **a production-style CI/CD pipeline for dbt on Databricks using GitHub Actions.**
 
-- dbt deps  
-- dbt compile  
-- dbt build (changed models only; fallback to Bronze model on first run)
+### CI Workflow
 
-**CD – Production deployment**
+Triggered on Pull Request.
 
-Triggered on push to **main**
+Steps:
 
-- Runs **dbt build -t prod** using the production SQL Warehouse
+- 1.Checkout repository
+
+- 2.Install dbt-databricks
+
+- 3.Create profiles.yml
+
+- 4.Download baseline manifest.json
+
+- 5.Run
+
+```bash
+dbt build --select state:modified+ --defer --state artifacts
+```
+
+Slim CI reduces CI runtime by building only modified dbt models and their downstream dependencies using dbt state comparison.
+
+### CD Workflow
+
+Triggered when code is merged into main.
+
+Steps:
+
+- 1.Deploy models to production
+
+- 2.Run
+
+```bash
+dbt build -t prod
+```
+
+- 3.Save manifest.json as artifact for future Slim CI runs.
+
+```md
+        Developer Branch
+            │
+            │ Pull Request
+            ▼
+        GitHub Actions CI
+        (dbt Slim CI)
+        state:modified+
+            │
+            │ Merge
+            ▼
+        main branch
+            │
+            ▼
+        GitHub Actions CD
+        dbt build (prod)
+            │
+            ▼
+        Databricks Lakehouse
+        (Bronze → Silver → Gold)
+```
+
+Key capabilities include:
+
+- Automated Pull Request validation (CI) using dbt
+
+- Automated production deployment (CD) when code is merged into main
+
+- Slim CI optimization using dbt state comparison
+
+- Reuse of baseline manifest.json artifacts generated from the main branch
+
+- Deferred state comparison to only build modified models and their downstream dependencies
+
+Implemented GitHub Actions based CI/CD for dbt on Databricks, including Slim CI with deferred state comparison using baseline manifest artifacts.
+
 ---
 ## GitHub Secrets & Variables
 
