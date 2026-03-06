@@ -53,3 +53,9 @@ jobs:
 
       - name: dbt build (prod)
         run: dbt build -t prod
+
+      - name: Upload manifest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-manifest
+          path: target/manifest.json
