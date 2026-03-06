@@ -2,6 +2,7 @@ name: dbt-ci
 
 on:
   pull_request:
+    branches: [ "main" ]
 
 jobs:
   ci:
@@ -39,7 +40,7 @@ jobs:
           EOF
         env:
           DBT_CATALOG: ${{ vars.DBT_CATALOG }}
-          DBT_SCHEMA:  ${{ vars.DBT_SCHEMA_DEV }}
+          DBT_SCHEMA: ${{ vars.DBT_SCHEMA_DEV }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
@@ -47,5 +48,8 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
-      - name: dbt build (slim ci)
-        run: dbt build -t dev --select state:modified+ --defer --state artifacts
+      - name: dbt debug
+        run: dbt debug -t dev
+
+      - name: dbt build (dev)
+        run: dbt build -t dev

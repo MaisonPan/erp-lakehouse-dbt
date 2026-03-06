@@ -2,7 +2,7 @@ name: dbt-cd
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -40,7 +40,7 @@ jobs:
           EOF
         env:
           DBT_CATALOG: ${{ vars.DBT_CATALOG }}
-          DBT_SCHEMA:  ${{ vars.DBT_SCHEMA_PROD }}
+          DBT_SCHEMA: ${{ vars.DBT_SCHEMA_PROD }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH_PROD }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
@@ -48,5 +48,8 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
-      - name: dbt build (prod gold BIStarSchema)
-        run: dbt build -t prod --select path:models/gold/northwind/BIStarSchema
+      - name: dbt debug
+        run: dbt debug -t prod
+
+      - name: dbt build (prod)
+        run: dbt build -t prod
