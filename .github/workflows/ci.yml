@@ -2,7 +2,11 @@ name: dbt-ci
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   ci:
@@ -16,6 +20,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install dbt-databricks
         run: |
@@ -48,11 +53,11 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
-      - name: Create artifacts folder
-        run: mkdir -p artifacts
-
       - name: dbt debug
         run: dbt debug -t dev
+
+      - name: Create artifacts folder
+        run: mkdir -p artifacts
 
       - name: Download baseline manifest
         uses: dawidd6/action-download-artifact@v3
@@ -63,14 +68,64 @@ jobs:
           branch: main
           if_no_artifact_found: warn
 
-      - name: Show downloaded files
-        run: ls -R artifacts || true
+      - name: List impacted models
+        id: impacted
+        run: |
+          if [ -f artifacts/manifest.json ]; then
+            dbt ls -t dev --select state:modified+ --defer --state artifacts > impacted_models.txt || true
+          else
+            echo "No baseline manifest found" > impacted_models.txt
+          fi
+
+          echo "Impacted models:"
+          cat impacted_models.txt || true
 
       - name: dbt build (slim ci)
         run: |
           if [ -f artifacts/manifest.json ]; then
-            dbt build -t dev --select state:modified+ --defer --state artifacts
+            dbt build -t dev --fail-fast --select state:modified+ --defer --state artifacts
           else
             echo "No baseline manifest found, fallback to full build"
-            dbt build -t dev
+            dbt build -t dev --fail-fast
           fi
+
+      - name: Generate dbt docs (dev)
+        run: dbt docs generate -t dev
+
+      - name: Upload dbt artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-ci-artifacts
+          path: |
+            target/manifest.json
+            target/catalog.json
+            target/run_results.json
+            target/index.html
+
+      - name: Create PR comment body
+        run: |
+          {
+            echo "## dbt CI Summary"
+            echo ""
+            if [ -f artifacts/manifest.json ]; then
+              echo "**Mode:** Slim CI"
+            else
+              echo "**Mode:** Full build fallback"
+            fi
+            echo ""
+            echo "### Impacted models"
+            echo '```'
+            cat impacted_models.txt
+            echo '```'
+            echo ""
+            echo "### Artifacts generated"
+            echo "- manifest.json"
+            echo "- catalog.json"
+            echo "- run_results.json"
+            echo "- dbt docs (index.html)"
+          } > pr_comment.md
+
+      - name: Sticky PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: pr_comment.md

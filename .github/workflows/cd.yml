@@ -2,7 +2,10 @@ name: dbt-cd
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
@@ -16,6 +19,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install dbt-databricks
         run: |
@@ -52,10 +56,23 @@ jobs:
         run: dbt debug -t prod
 
       - name: dbt build (prod)
-        run: dbt build -t prod
+        run: dbt build -t prod --fail-fast
 
-      - name: Upload manifest artifact
+      - name: Generate dbt docs (prod)
+        run: dbt docs generate -t prod
+
+      - name: Upload baseline manifest
         uses: actions/upload-artifact@v4
         with:
           name: baseline-manifest
           path: target/manifest.json
+
+      - name: Upload dbt docs artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-prod-artifacts
+          path: |
+            target/manifest.json
+            target/catalog.json
+            target/run_results.json
+            target/index.html
