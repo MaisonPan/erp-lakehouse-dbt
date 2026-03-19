@@ -398,7 +398,9 @@ parquet.`abfss://landing@panmaisonadls.dfs.core.windows.net/northwind/Orders/*/O
 
 ## CI/CD (GitHub Actions)
 
-This project implements **a production-style CI/CD pipeline for dbt on Databricks using GitHub Actions.**
+This project implements a **production-style CI/CD pipeline for dbt on Databricks using GitHub Actions**.
+
+The pipeline automates validation, testing, and deployment of dbt models using a **Slim CI strategy**.
 
 ### CI Workflow
 
@@ -414,7 +416,7 @@ Steps:
 
 - 4.Download baseline manifest.json
 
-- 5.Run
+- 5.Run Slim CI:
 
 ```bash
 dbt build --select state:modified+ --defer --state artifacts
@@ -472,9 +474,10 @@ Key capabilities include:
 
 - Deferred state comparison to only build modified models and their downstream dependencies
 
-Implemented GitHub Actions based CI/CD for dbt on Databricks, including Slim CI with deferred state comparison using baseline manifest artifacts.
+This project demonstrates how to implement **GitHub Actions-based CI/CD for dbt on Databricks,** including **Slim CI with deferred state comparison using baseline manifest artifacts.**
 
 ---
+
 ## GitHub Secrets & Variables
 
 **Add Repository Secrets**
